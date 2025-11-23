@@ -5,7 +5,7 @@
     <meta name="google-site-verification" content="_eK3fXMT06ioQvn0APxoIEbT_wGUKNz6M8qcUTVwltQ" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OXゲーム & オセロ オンライン対戦 | 無料ブラウザゲーム</title>
-    <meta name="description" content="登録不要・インストール不要ですぐに遊べる無料のオンライン対戦ゲーム。OXゲーム（三目並べ）とオセロがブラウザで楽しめます。友達と対戦したり、観戦したりできます。">
+    <meta name="description" content="登録不要・インストール不要ですぐに遊べる無料のオンライン対戦ゲーム。OXゲーム(三目並べ)とオセロがブラウザで楽しめます。友達と対戦したり、観戦したりできます。">
     
     <meta name="keywords" content="OXゲーム, オセロ, リバーシ, オンライン対戦, 無料ゲーム, ブラウザゲーム">
     
@@ -214,7 +214,7 @@
 
         /* モーダル */
         .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.5); align-items: center; justify-content: center; animation-name: fadeIn; animation-duration: 0.3s; }
-        .modal-content { background-color: var(--white-bg); margin: auto; padding: 25px; border-radius: 10px; width: 90%; max-width: 500px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); animation-name: modalopen; animation-duration: 0.4s; box-sizing: border-box; max-height: 90vh; display: flex; flex-direction: column; }
+        .modal-content { background-color: var(--white-bg); margin: auto; padding: 25px; border-radius: 10px; width: 90%; max-width: 500px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); animation-name: modalopen; animation-duration: 0.4s; box-sizing: border-box; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; }
         .modal-header h2 { margin: 0; color: var(--text-dark); font-size: 1.2rem; }
         .close-btn { color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; }
@@ -927,14 +927,61 @@
             }
 
             function updateHelpContent() {
+                const helpContent = document.getElementById('helpContent');
+                if (!helpContent) return; // エラー防止
+
                 let html = '';
-                const commonNotes = `<h3>注意事項</h3><ul><li><strong>オンライン対戦のマナー:</strong> 相手への誹謗中傷や、無言での切断はお控えください。お互いに気持ちよくプレイしましょう。</li><li><strong>ログの保存:</strong> 試合の記録（ログ）はブラウザを閉じると消えてしまいます。残したい場合は「ログ確認」から保存してください。</li><li><strong>推奨環境:</strong> 最新のブラウザ（Chrome, Edge, Safari等）でのプレイを推奨します。</li></ul>`;
+                
+                // 1. ゲームごとのルール説明
                 if (currentGameType === 'othello') {
-                    html += `<h3>オセロの遊び方</h3><p>黒（先手）と白（後手）に分かれて、8x8の盤面で石を取り合います。</p><ul><li><strong>基本ルール:</strong> 相手の石を自分の石で挟むと、その間の石が自分の色に変わります。</li><li><strong>勝利条件:</strong> 盤面が埋まるか、両者打つ場所がなくなった時点で、石の数が多い方が勝ちです。</li><li><strong>パス:</strong> 打てる場所がない場合は自動的にパスとなり、相手の番になります。</li><li><strong>ヒント:</strong> 打てる場所にはうっすらと丸いマークが表示されます。</li></ul>`;
+                    html += `
+                        <h3>オセロの遊び方</h3>
+                        <p>黒(先手)と白(後手)に分かれて、8x8の盤面で石を取り合います。</p>
+                        <ul>
+                            <li><strong>基本ルール:</strong> 相手の石を自分の石で挟むと、挟んだ石が自分の色に変わります。</li>
+                            <li><strong>勝利条件:</strong> 盤面が埋まるか、両者とも置ける場所がなくなったら終了です。石の多い方が勝ちです。</li>
+                            <li><strong>パス:</strong> 置ける場所がない場合は自動的にパスとなり、相手の番になります。</li>
+                            <li><strong>ヒント:</strong> 置ける場所にはうっすらと丸いマークが表示されます。</li>
+                        </ul>
+                    `;
                 } else {
-                    html += `<h3>OXゲームの遊び方</h3><p>〇（先手）と×（後手）に分かれて、マスを取り合います。</p><ul><li><strong>基本ルール:</strong> 縦・横・斜めのいずれか一列に、自分の駒を既定の数だけ並べれば勝ちです。</li><li><strong>盤面サイズ:</strong> 設定から 3x3, 4x4, 5x5 を選べます。サイズによって勝利に必要な数が変わります（例: 5x5なら5つ並べば勝ち等）。</li><li><strong>特殊ルール (FIFOモード):</strong> 設定で「3つまで」をオンにすると、4つ目を置いたときに一番古い自分の駒が消えます。これにより無限に続く戦略的なゲームになります。</li></ul>`;
+                    html += `
+                        <h3>OXゲームの遊び方</h3>
+                        <p>〇(先手)と×(後手)に分かれて、マスを取り合います。</p>
+                        <ul>
+                            <li><strong>基本ルール:</strong> 縦・横・斜めのいずれか一列に、自分の駒を既定の数だけ並べれば勝ちです。</li>
+                            <li><strong>盤面サイズ:</strong> 設定から 3x3, 4x4, 5x5 を選べます。サイズによって勝利に必要な数が変わります(例: 5x5なら5つ並べば勝ち等)。</li>
+                            <li><strong>特殊ルール (FIFOモード):</strong> 設定で「3つまで」をオンにすると、盤面に置ける駒が3つまでになります。4つ目を置くと一番古い駒が消えます(3x3専用)。</li>
+                        </ul>
+                    `;
                 }
-                html += commonNotes;
+
+                // 2. 共通の説明(オンライン対戦の手順と注意事項)
+                html += `
+                    <h3>オンライン対戦の遊び方</h3>
+                    <ol>
+                        <li>「オンライン対戦」ボタンを押します。</li>
+                        <li>名前を入力し、「ルーム作成」で部屋を作ります(ホストになります)。</li>
+                        <li>
+                            <strong>ルームの公開設定:</strong>
+                            <ul>
+                                <li><span style="color:#4CAF50; font-weight:bold;">公開 (オン):</span> 「公開ルーム一覧」に表示され、誰でも参加できます。</li>
+                                <li><span style="color:#666; font-weight:bold;">非公開 (オフ):</span> 一覧には表示されません。ルームIDを伝えた友達だけが参加できます。</li>
+                            </ul>
+                        </li>
+                        <li>友達は「IDで参加」にIDを入力するか、公開ルーム一覧から参加します。</li>
+                        <li>「参加する」ボタンでスロットに入り、「準備完了」を押すと試合開始です。</li>
+                    </ol>
+
+                    <h3>注意事項</h3>
+                    <ul>
+                        <li>オンライン対戦は接続が切れるとルームから退出となります。</li>
+                        <li>荒らし行為や不適切な名前の使用はお控えください。ホストはプレイヤーをキック(強制退出)できます。</li>
+                        <li>60分間操作がないルームは自動的に削除されます。</li>
+                        <li style="color: #d32f2f;"><strong>サーバーの起動について:</strong> 無料サーバーを使用しているため、一定時間アクセスがないとスリープ状態になります。その場合、「オンライン対戦」ボタンを押してから接続までに<strong>1分程度時間がかかることがあります</strong>が、そのままお待ちください。</li>
+                    </ul>
+                `;
+
                 helpContent.innerHTML = html;
             }
 
@@ -1744,4 +1791,5 @@
 </body>
 
 </html>
+
 

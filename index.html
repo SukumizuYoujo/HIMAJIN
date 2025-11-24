@@ -7,9 +7,8 @@
     <meta name="google-site-verification" content="_eK3fXMT06ioQvn0APxoIEbT_wGUKNz6M8qcUTVwltQ" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OXゲーム & オセロ オンライン対戦 | 無料ブラウザゲーム</title>
-    <meta name="description" content="登録不要・インストール不要ですぐに遊べる無料のオンライン対戦ゲーム。OXゲーム(三目並べ)とオセロがブラウザで楽しめます。友達と対戦したり、観戦したりできます。">
-    
-    <meta name="keywords" content="OXゲーム, オセロ, リバーシ, オンライン対戦, 無料ゲーム, ブラウザゲーム">
+    <meta name="description" content="登録不要・インストール不要ですぐに遊べる無料ブラウザゲーム。友達とオンライン対戦ができる「まるばつゲーム（OXゲーム/三目並べ/Tic Tac Toe）」と「リバーシ（オセロ）」を公開中。PC・スマホ対応。">
+    <meta name="keywords" content="まるばつゲーム, 三目並べ, OXゲーム, Tic Tac Toe, リバーシ, オセロ, オンライン対戦, 無料ゲーム, ブラウザゲーム, 暇つぶし">
     
     <meta property="og:title" content="OXゲーム & オセロ オンライン対戦">
     <meta property="og:description" content="ブラウザですぐ遊べる！友達とリアルタイム対戦ができる無料ゲームサイト。">
@@ -62,11 +61,10 @@
         #mainContainer { display: flex; width: 100%; height: 100vh; overflow: hidden; }
         #gameWrapper {
             flex-grow: 1;
-            padding: 20px;
+            padding: 0; /* 変更: パディングなし */
             box-sizing: border-box;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column; /* 変更: 縦並びにする */
             overflow-y: auto;
             transition: all 0.3s ease;
         }
@@ -327,107 +325,145 @@
     <div id="mainContainer">
         
         <div id="gameWrapper">
-            <div class="game-container">
-                <h1 id="gameTitle">OXゲーム</h1>
-                <div id="roomIdDisplayHeader"></div>
+            
+            <div id="gameMainArea" style="min-height: 100%; display: flex; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
                 
-                <div id="matchPlayerInfo">
-                    <span id="playerDisplayO" class="player-name-disp"></span>
-                    <span id="playerDisplayX" class="player-name-disp"></span>
-                </div>
-                <div id="scoreBoard">
-                    <span class="score-win">WIN: <span id="scoreWinCount">0</span></span>
-                    <span class="score-lose">LOSE: <span id="scoreLoseCount">0</span></span>
-                    <span class="score-draw">DRAW: <span id="scoreDrawCount">0</span></span>
-                </div>
-
-                <div id="othelloScoreBoard">
-                    <span>黒(O): <span id="othelloScoreBlack">2</span></span>
-                    <span>白(X): <span id="othelloScoreWhite">2</span></span>
-                </div>
-                <div id="status">ようこそ！</div>
-
-                <div id="lobbyContainer">
-                    <div class="lobby-section">
-                        <h2>対戦スロット</h2>
-                        <div class="player-slots">
-                            <div class="player-slot" id="slot-O">
-                                <span class="player-slot-name empty">(O) 空き</span>
-                                <button class="slot-btn" data-slot="O">参加する</button>
-                            </div>
-                            <div class="player-slot" id="slot-X">
-                                <span class="player-slot-name empty">(X) 空き</span>
-                                <button class="slot-btn" data-slot="X">参加する</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="lobby-section">
-                        <h2>観戦者</h2>
-                        <ul id="spectatorList"></ul>
-                    </div>
-                </div>
-
-                <div class="board-container" id="boardContainer">
-                    <div id="resultOverlay"><span id="resultText"></span></div>
-                    <div id="board" class="board-3x3"></div>
-                </div>
-
-                <div id="buttonContainer">
-                    <div class="button-set" id="buttonSet-local" style="display: block;">
-                        <div class="controls">
-                            <button id="onlineBtn">オンライン対戦</button>
-                            <button id="settingsBtn">設定</button>
-                        </div>
-                        <div class="controls-extra">
-                            <button id="localResetBtn">リセット</button>
-                            <button id="logBtn">ログ確認</button>
-                        </div>
-                        <div class="controls-extra">
-                            <button id="helpBtn">遊び方</button>
-                            <label for="importLogInput" class="file-import-label">ログ読込</label>
-                            <input type="file" id="importLogInput" accept=".json,.txt">
-                        </div>
-                    </div>
-
-                    <div class="button-set" id="buttonSet-lobby">
-                        <div class="controls">
-                            <button id="primaryActionBtnLobby">準備完了</button>
-                            <button id="settingsBtnLobby">設定</button>
-                        </div>
-                        <div class="controls-extra">
-                            <button id="chatBtnLobby">チャット</button>
-                            <button id="logBtnLobby">ログ確認 (全試合)</button>
-                        </div>
-                        <div class="single-control">
-                            <button id="exitBtnLobby">退出</button>
-                        </div>
-                    </div>
+                <div class="game-container">
+                    <h1 id="gameTitle">OXゲーム</h1>
+                    <div id="roomIdDisplayHeader"></div>
                     
-                    <div class="button-set" id="buttonSet-in-game">
-                        <div class="controls">
-                            <button id="primaryActionBtnGame">降参</button>
-                            <button id="chatBtnGame">チャット</button>
+                    <div id="matchPlayerInfo">
+                        <span id="playerDisplayO" class="player-name-disp"></span>
+                        <span id="playerDisplayX" class="player-name-disp"></span>
+                    </div>
+                    <div id="scoreBoard">
+                        <span class="score-win">WIN: <span id="scoreWinCount">0</span></span>
+                        <span class="score-lose">LOSE: <span id="scoreLoseCount">0</span></span>
+                        <span class="score-draw">DRAW: <span id="scoreDrawCount">0</span></span>
+                    </div>
+    
+                    <div id="othelloScoreBoard">
+                        <span>黒(O): <span id="othelloScoreBlack">2</span></span>
+                        <span>白(X): <span id="othelloScoreWhite">2</span></span>
+                    </div>
+                    <div id="status">ようこそ！</div>
+    
+                    <div id="lobbyContainer">
+                        <div class="lobby-section">
+                            <h2>対戦スロット</h2>
+                            <div class="player-slots">
+                                <div class="player-slot" id="slot-O">
+                                    <span class="player-slot-name empty">(O) 空き</span>
+                                    <button class="slot-btn" data-slot="O">参加する</button>
+                                </div>
+                                <div class="player-slot" id="slot-X">
+                                    <span class="player-slot-name empty">(X) 空き</span>
+                                    <button class="slot-btn" data-slot="X">参加する</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="single-control">
-                            <button id="exitBtnGame">退出</button>
+                        <div class="lobby-section">
+                            <h2>観戦者</h2>
+                            <ul id="spectatorList"></ul>
                         </div>
                     </div>
-                    
-                    <div class="button-set" id="buttonSet-post-game">
-                        <div class="single-control">
-                            <button id="primaryActionBtnPostGame">待機画面に戻る</button>
+    
+                    <div class="board-container" id="boardContainer">
+                        <div id="resultOverlay"><span id="resultText"></span></div>
+                        <div id="board" class="board-3x3"></div>
+                    </div>
+    
+                    <div id="buttonContainer">
+                        <div class="button-set" id="buttonSet-local" style="display: block;">
+                            <div class="controls">
+                                <button id="onlineBtn">オンライン対戦</button>
+                                <button id="settingsBtn">設定</button>
+                            </div>
+                            <div class="controls-extra">
+                                <button id="localResetBtn">リセット</button>
+                                <button id="logBtn">ログ確認</button>
+                            </div>
+                            <div class="controls-extra">
+                                <button id="helpBtn">遊び方</button>
+                                <label for="importLogInput" class="file-import-label">ログ読込</label>
+                                <input type="file" id="importLogInput" accept=".json,.txt">
+                            </div>
                         </div>
-                        <div class="controls-extra">
-                            <button id="logBtnPostGame">ログ確認 (現試合)</button>
-                            <button id="chatBtnPostGame">チャット</button>
+    
+                        <div class="button-set" id="buttonSet-lobby">
+                            <div class="controls">
+                                <button id="primaryActionBtnLobby">準備完了</button>
+                                <button id="settingsBtnLobby">設定</button>
+                            </div>
+                            <div class="controls-extra">
+                                <button id="chatBtnLobby">チャット</button>
+                                <button id="logBtnLobby">ログ確認 (全試合)</button>
+                            </div>
+                            <div class="single-control">
+                                <button id="exitBtnLobby">退出</button>
+                            </div>
                         </div>
-                        <div class="single-control">
-                            <button id="exitBtnPostGame">退出</button>
+                        
+                        <div class="button-set" id="buttonSet-in-game">
+                            <div class="controls">
+                                <button id="primaryActionBtnGame">降参</button>
+                                <button id="chatBtnGame">チャット</button>
+                            </div>
+                            <div class="single-control">
+                                <button id="exitBtnGame">退出</button>
+                            </div>
+                        </div>
+                        
+                        <div class="button-set" id="buttonSet-post-game">
+                            <div class="single-control">
+                                <button id="primaryActionBtnPostGame">待機画面に戻る</button>
+                            </div>
+                            <div class="controls-extra">
+                                <button id="logBtnPostGame">ログ確認 (現試合)</button>
+                                <button id="chatBtnPostGame">チャット</button>
+                            </div>
+                            <div class="single-control">
+                                <button id="exitBtnPostGame">退出</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            
+            <section id="seoContent" style="
+                width: 100%;
+                padding: 40px 20px; 
+                color: #555; 
+                line-height: 1.8; 
+                background-color: #f0f2f5; /* 背景色をつけて区分け */
+                border-top: 1px solid #ddd;
+                text-align: left; 
+                font-size: 0.95rem;
+                box-sizing: border-box;
+            ">
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <h2 style="
+                        font-size: 1.2rem; 
+                        margin-bottom: 20px; 
+                        color: var(--primary-blue); 
+                        text-align: center; 
+                        border-bottom: 2px solid #fff;
+                        padding-bottom: 10px;
+                    ">ブラウザですぐ遊べる無料ボードゲーム</h2>
+                    
+                    <p style="margin-bottom: 20px;">
+                        「board-taisen.com」は、インストール不要ですぐに遊べる無料Webゲームサイトです。
+                        発行されたIDを共有するだけで、友達と<strong>オンライン対戦</strong>が楽しめます。
+                    </p>
+    
+                    <h3 style="font-size: 1rem; font-weight: bold; margin-bottom: 10px; color: #333;">収録ゲーム</h3>
+                    <ul style="padding-left: 20px; margin-bottom: 0;">
+                        <li style="margin-bottom: 8px;"><strong>まるばつゲーム (三目並べ):</strong> 定番のOXゲーム。3x3、4x4、5x5の盤面や、3つ目以降が消えるFIFOモードも搭載。</li>
+                        <li><strong>リバーシ (オセロ):</strong> 白と黒の石を挟んでひっくり返す頭脳戦。スマホやPCで本格的な8x8対戦が可能。</li>
+                    </ul>
+                </div>
+            </section>
+            </div>
 
         <div id="sidePanel" style="display: none;">
             <div id="chatContainer">
@@ -638,7 +674,6 @@
             <div id="chatContainerModal"></div>
         </div>
     </div>
-
 
     <script>
         let showLogList;
@@ -1804,5 +1839,8 @@
 </body>
 
 </html>
+
+
+
 
 

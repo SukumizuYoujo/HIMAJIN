@@ -61,13 +61,12 @@
         #mainContainer { display: flex; width: 100%; height: 100vh; overflow: hidden; }
         #gameWrapper {
             flex-grow: 1;
-            padding: 20px 0; 
+            padding: 0;
             box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: block;
             overflow-y: auto;
             transition: all 0.3s ease;
+            -webkit-overflow-scrolling: touch;
         }
         #sidePanel {
             width: 340px;
@@ -327,7 +326,7 @@
         
         <div id="gameWrapper">
             
-            <div id="gameMainArea" style="width: 100%; min-height: 100%; display: flex; justify-content: center; align-items: center; padding-bottom: 80px; box-sizing: border-box;">
+            <div id="gameMainArea" style="width: 100%; min-height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px 0 80px 0; box-sizing: border-box;">
                 
                 <div class="game-container">
                     <h1 id="gameTitle">OXゲーム</h1>
@@ -1840,6 +1839,7 @@
 </body>
 
 </html>
+
 
 
 

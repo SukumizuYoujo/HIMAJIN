@@ -23,7 +23,7 @@
     <link rel="manifest" href="favicon/site.webmanifest" />
     
     <style>
-        /* 基本スタイル */
+        /* === 基本スタイル === */
         :root {
             /* デフォルトカラー定義 */
             --default-o-tic: #d32f2f; /* 赤 */
@@ -58,7 +58,7 @@
             overflow: hidden; /* スクロール防止 */
         }
 
-        /* PC/スマホレイアウト */
+        /* === PC/スマホレイアウト === */
         #mainContainer { display: flex; width: 100%; height: 100vh; overflow: hidden; }
         #gameWrapper {
             flex-grow: 1;
@@ -98,7 +98,7 @@
             .game-container { max-width: 500px; }
         }
 
-        /* サイドパネル中身 (チャット専用) */
+        /* === サイドパネル中身 (チャット専用) === */
         #chatContainer { display: flex; flex-direction: column; flex-grow: 1; overflow: hidden; background: #fdfdfd; height: 100%; }
         #chatHeader { padding: 10px; border-bottom: 1px solid #eee; font-weight: bold; text-align: center; }
         #chatMessages { flex-grow: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 12px; }
@@ -115,13 +115,13 @@
         #chatSendBtn { background: var(--primary-blue); color: white; min-width: 60px; }
         #chatToggleBtn { display: none; }
 
-        /* ゲームコンテナ中身 */
+        /* === ゲームコンテナ中身 === */
         .game-container { max-width: 420px; width: 100%; margin: 0 auto; }
         h1 { margin-bottom: 10px; font-size: 1.5rem; text-align: center; }
         
         #roomIdDisplayHeader { display: none; font-size: 1rem; font-weight: 600; color: var(--text-light); background: #f9f9f9; padding: 5px 10px; border-radius: 8px; margin-bottom: 10px; text-align: center; }
         
-        /* 新規: 対戦プレイヤー名表示バー */
+        /* 対戦プレイヤー名表示バー */
         #matchPlayerInfo {
             display: none; /* 対戦/観戦中のみ表示 */
             justify-content: space-between;
@@ -266,12 +266,6 @@
         .mini-disc.o { background-color: var(--player-o-color); }
         .mini-disc.x { background-color: var(--player-x-color); }
 
-        /* 確認モーダル */
-        #exitConfirmModal .modal-content, #kickConfirmModal .modal-content { max-width: 400px; }
-        #exitConfirmControls, #kickConfirmControls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        #confirmExitBtn, #confirmKickBtn { background-color: var(--primary-red); color: white; }
-        #cancelExitBtn, #cancelKickBtn { background-color: var(--dark-gray); color: white; }
-
         /* 設定モーダル */
         #settingsModal .modal-content { overflow-y: auto; }
         .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 10px; border-bottom: 1px solid #eee; transition: opacity 0.3s ease; }
@@ -320,6 +314,12 @@
         #helpContent h3 { border-bottom: 2px solid #eee; padding-bottom: 5px; margin-top: 20px; margin-bottom: 10px; color: var(--primary-blue); }
         #helpContent ul { padding-left: 20px; margin-bottom: 10px; }
         #helpContent li { margin-bottom: 5px; }
+
+        /* 確認モーダル */
+        #exitConfirmModal .modal-content, #kickConfirmModal .modal-content { max-width: 400px; }
+        #exitConfirmControls, #kickConfirmControls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        #confirmExitBtn, #confirmKickBtn { background-color: var(--primary-red); color: white; }
+        #cancelExitBtn, #cancelKickBtn { background-color: var(--dark-gray); color: white; }
     </style>
 </head>
 <body class="chat-docked">
@@ -650,7 +650,7 @@
             
             const serverUrl = 'wss://ox-online.onrender.com';
 
-            // --- DOM参照 ---
+            // DOM参照
             const body = document.body;
             const statusDisplay = document.getElementById('status');
             const boardElement = document.getElementById('board');
@@ -756,7 +756,7 @@
             const helpModalTitle = document.getElementById('helpModalTitle');
             const helpContent = document.getElementById('helpContent');
 
-            // --- ゲーム状態変数 ---
+            // ゲーム状態変数
             let gameActive = true;
             let boardSize = 3;
             let winningConditions = [];
@@ -789,7 +789,7 @@
             let currentRoomColors = { O: null, X: null };
             let currentRoomPlayerNames = { O: '?', X: '?' }; // プレイヤー名保存用
 
-            // --- 関数定義 ---
+            // 関数定義
             
             handleCellClick = (e) => {
                 gameLogic.handleCellClick(e);
@@ -797,8 +797,8 @@
 
             function applyColors(colors) {
                 currentRoomColors = colors || { O: null, X: null };
-                const defO = (currentGameType 'othello') ? '#222222' : '#d32f2f';
-                const defX = (currentGameType 'othello') ? '#f1f1f1' : '#1976d2';
+                const defO = (currentGameType === 'othello') ? '#222222' : '#d32f2f';
+                const defX = (currentGameType === 'othello') ? '#f1f1f1' : '#1976d2';
                 const colorO = currentRoomColors.O || defO;
                 const colorX = currentRoomColors.X || defX;
                 document.documentElement.style.setProperty('--player-o-color', colorO);
@@ -808,27 +808,27 @@
 
             function updatePaletteUI() {
                 const buttons = document.querySelectorAll('.color-btn');
-                const mySlot = (myPlayerMark 'O' || myPlayerMark 'X') ? myPlayerMark : null;
+                const mySlot = (myPlayerMark === 'O' || myPlayerMark === 'X') ? myPlayerMark : null;
                 buttons.forEach(btn => {
                     const color = btn.dataset.color;
                     btn.classList.remove('active', 'disabled');
-                    if (myLocalColorPref color) { btn.classList.add('active'); }
+                    if (myLocalColorPref === color) { btn.classList.add('active'); }
                     if (isOnlineGame && mySlot) {
-                        const opponentSlot = (mySlot 'O') ? 'X' : 'O';
+                        const opponentSlot = (mySlot === 'O') ? 'X' : 'O';
                         const opponentColor = currentRoomColors[opponentSlot];
-                        if (opponentColor && opponentColor color) { btn.classList.add('disabled'); }
+                        if (opponentColor && opponentColor === color) { btn.classList.add('disabled'); }
                     }
                 });
             }
             
             function switchGame(newGameType) {
                 currentGameType = newGameType;
-                if (newGameType 'othello') {
+                if (newGameType === 'othello') {
                     gameLogic = othelloLogic;
                     gameTitle.textContent = othelloLogic.gameName;
                     const radio = document.getElementById(`gameOthello`); if(radio) radio.checked = true;
                     if(isOnlineGame) scoreBoard.style.display = 'flex'; else scoreBoard.style.display = 'none';
-                    othelloScoreBoard.style.display = (newGameType 'othello' && isOnlineGame) ? 'flex' : 'none';
+                    othelloScoreBoard.style.display = (newGameType === 'othello' && isOnlineGame) ? 'flex' : 'none';
                 } else {
                     gameLogic = ticTacToeLogic;
                     gameTitle.textContent = ticTacToeLogic.gameName;
@@ -875,7 +875,7 @@
                 switchGame(currentGameType); 
                 applySettings(getSettingsFromUI(), false);
                 isOnlineGame = false; myPlayerMark = ''; isHost = false; currentRoomId = '';
-                if (socket && socket.readyState WebSocket.OPEN) socket.close();
+                if (socket && socket.readyState === WebSocket.OPEN) socket.close();
                 lockSettings(false); onlineBtn.disabled = false;
                 scoreBoard.style.display = 'none'; othelloScoreBoard.style.display = 'none'; matchPlayerInfo.style.display = 'none';
                 scores = { win: 0, lose: 0, draw: 0 }; updateScoreDisplay();
@@ -923,7 +923,7 @@
             function updateSettingDependenciesUI() {
                 const settings = getSettingsFromUI();
                 boardSize = settings.boardSize;
-                const is3x3 = (boardSize 3);
+                const is3x3 = (boardSize === 3);
                 limitModeContainer.classList.toggle('disabled', !is3x3);
                 limitModeCheckbox.disabled = !is3x3;
                 if (!is3x3) limitModeCheckbox.checked = false;
@@ -931,7 +931,7 @@
                 highlightOptionContainer.classList.toggle('disabled', !isFifoOn);
                 highlightOldestCheckbox.disabled = !isFifoOn;
                 if (!isFifoOn) highlightOldestCheckbox.checked = false;
-                if (currentGameType 'tictactoe') ticTacToeLogic.updateOldestHighlight(); 
+                if (currentGameType === 'tictactoe') ticTacToeLogic.updateOldestHighlight(); 
             }
             
             function updateSettingDependencies(notifyServer = true) {
@@ -947,7 +947,7 @@
                 let html = '';
                 
                 // 1. ゲームごとのルール説明
-                if (currentGameType 'othello') {
+                if (currentGameType === 'othello') {
                     html += `
                         <h3>オセロの遊び方</h3>
                         <p>黒(先手)と白(後手)に分かれて、8x8の盤面で石を取り合います。</p>
@@ -999,12 +999,12 @@
                 helpContent.innerHTML = html;
             }
 
-            // --- ゲームロジック ---
+            // ゲームロジック
             const ticTacToeLogic = {
                 gameName: 'OXゲーム',
                 generateWinningConditions: (size) => {
                     const conditions = [];
-                    const winLength = (size 3) ? 3 : (size 4 ? 4 : 5);
+                    const winLength = (size === 3) ? 3 : (size === 4 ? 4 : 5);
                     for (let r = 0; r < size; r++) {
                         for (let c = 0; c <= size - winLength; c++) {
                             const horizontal = [];
@@ -1059,7 +1059,7 @@
                     const cellIndex = parseInt(clickedCell.getAttribute('data-index'));
                     if (!gameActive || boardState[cellIndex] !== '') return;
                     if (isOnlineGame) {
-                        if (!isMyTurn || myPlayerMark 'SPECTATOR') return;
+                        if (!isMyTurn || myPlayerMark === 'SPECTATOR') return;
                         socket.send(JSON.stringify({ type: 'move', cellIndex: cellIndex, gameType: 'tictactoe' }));
                     } else {
                         ticTacToeLogic.applyMove(cellIndex, currentPlayer, false); 
@@ -1069,8 +1069,8 @@
                 applyMove: (cellIndex, player, isFromServer = false) => {
                     const limitMode = limitModeCheckbox.checked;
                     let logMessageDetail = '';
-                    if (limitMode && boardSize 3) {
-                        const queue = (player 'O') ? oQueue : xQueue;
+                    if (limitMode && boardSize === 3) {
+                        const queue = (player === 'O') ? oQueue : xQueue;
                         if (queue.length >= 3) {
                             const indexToClear = queue.shift();
                             boardState[indexToClear] = '';
@@ -1084,7 +1084,7 @@
                     if (cell) {
                         cell.textContent = player; cell.classList.remove('o', 'x'); cell.classList.add(player.toLowerCase()); 
                     }
-                    if (boardSize 3) { const queue = (player 'O') ? oQueue : xQueue; queue.push(cellIndex); }
+                    if (boardSize === 3) { const queue = (player === 'O') ? oQueue : xQueue; queue.push(cellIndex); }
                     addLog(`プレイヤー ${player} が マス${cellIndex + 1} に配置。${logMessageDetail}`, [...boardState]);
                     ticTacToeLogic.updateOldestHighlight(); 
                     if (ticTacToeLogic.checkWin(player)) { 
@@ -1096,19 +1096,19 @@
                     }
                 },
                 checkWin: (player) => {
-                    for (const condition of winningConditions) { if (condition.every(index => boardState[index] player)) return true; }
+                    for (const condition of winningConditions) { if (condition.every(index => boardState[index] === player)) return true; }
                     return false;
                 },
                 checkDraw: () => { return !boardState.includes(''); },
                 switchPlayer: () => {
-                    currentPlayer = currentPlayer 'O' ? 'X' : 'O';
+                    currentPlayer = currentPlayer === 'O' ? 'X' : 'O';
                     if (!isOnlineGame) statusDisplay.textContent = `プレイヤー ${currentPlayer} の番です`;
                     ticTacToeLogic.updateOldestHighlight(); 
                 },
                 updateOldestHighlight: () => {
                     ticTacToeLogic.clearAllHighlights(); 
                     if (!limitModeCheckbox.checked || !highlightOldestCheckbox.checked) return;
-                    const queue = (currentPlayer 'O') ? oQueue : xQueue;
+                    const queue = (currentPlayer === 'O') ? oQueue : xQueue;
                     if (queue.length >= 3) {
                         const indexToHighlight = queue[0];
                         const cell = document.querySelector(`.cell[data-index="${indexToHighlight}"]`);
@@ -1141,7 +1141,7 @@
                         cell.classList.add('cell-othello'); cell.setAttribute('data-index', i);
                         cell.addEventListener('click', handleCellClick); 
                         if(state[i]) {
-                            const discClass = state[i] 'O' ? 'disc-black' : 'disc-white';
+                            const discClass = state[i] === 'O' ? 'disc-black' : 'disc-white';
                             cell.innerHTML = `<div class="disc ${discClass}"></div>`;
                         }
                         boardElement.appendChild(cell);
@@ -1162,7 +1162,7 @@
                     const cellIndex = parseInt(clickedCell.getAttribute('data-index'));
                     if (!gameActive || boardState[cellIndex] !== '') return;
                     if (isOnlineGame) {
-                        if (!isMyTurn || myPlayerMark 'SPECTATOR') return;
+                        if (!isMyTurn || myPlayerMark === 'SPECTATOR') return;
                         socket.send(JSON.stringify({ type: 'move', cellIndex: cellIndex, gameType: 'othello' }));
                     } else {
                         const validMoves = othelloLogic.getValidMoves(boardState, currentPlayer);
@@ -1174,13 +1174,13 @@
                 },
                 updateBoardState: (newState, nextPlayer, lastPlayer) => {
                     boardState = newState; currentPlayer = nextPlayer; othelloLogic.renderBoard(boardState);
-                    const playerStr = lastPlayer 'O' ? '黒(O)' : '白(X)';
+                    const playerStr = lastPlayer === 'O' ? '黒(O)' : '白(X)';
                     addLog(`プレイヤー ${playerStr} が置きました。`, [...boardState]);
                     if (isMyTurn) othelloLogic.updateHints();
                     updateOthelloScoreDisplay(othelloLogic.getScores(boardState));
                 },
                 applyMove: (cellIndex, player, isFromServer = false) => {
-                    const opponent = player 'O' ? 'X' : 'O';
+                    const opponent = player === 'O' ? 'X' : 'O';
                     const flips = othelloLogic.getFlips(boardState, cellIndex, player, opponent);
                     boardState[cellIndex] = player; flips.forEach(i => boardState[i] = player);
                     othelloLogic.renderBoard(boardState);
@@ -1188,15 +1188,15 @@
                     updateOthelloScoreDisplay(othelloLogic.getScores(boardState));
                 },
                 switchPlayer: () => {
-                    let opponent = currentPlayer 'O' ? 'X' : 'O'; currentPlayer = opponent;
+                    let opponent = currentPlayer === 'O' ? 'X' : 'O'; currentPlayer = opponent;
                     let validMoves = othelloLogic.getValidMoves(boardState, currentPlayer);
-                    if (validMoves.length 0) {
-                        statusDisplay.textContent = `${currentPlayer 'O' ? '黒(O)' : '白(X)'} はパスしました。`;
-                        currentPlayer = (currentPlayer 'O' ? 'X' : 'O');
+                    if (validMoves.length === 0) {
+                        statusDisplay.textContent = `${currentPlayer === 'O' ? '黒(O)' : '白(X)'} はパスしました。`;
+                        currentPlayer = (currentPlayer === 'O' ? 'X' : 'O');
                         validMoves = othelloLogic.getValidMoves(boardState, currentPlayer);
-                        if (validMoves.length 0) { othelloLogic.endGame(); return; }
+                        if (validMoves.length === 0) { othelloLogic.endGame(); return; }
                     }
-                    statusDisplay.textContent = `${currentPlayer 'O' ? '黒(O)' : '白(X)'}の番です`;
+                    statusDisplay.textContent = `${currentPlayer === 'O' ? '黒(O)' : '白(X)'}の番です`;
                     othelloLogic.updateHints();
                 },
                 endGame: () => {
@@ -1212,15 +1212,15 @@
                          socket.send(JSON.stringify({ type: 'gameOver', result: result, scores: scores, gameType: 'othello' }));
                     } else if (!isOnlineGame) {
                          addLog(resultText, [...boardState]);
-                         if (result 'DRAW') showResult('draw');
-                         else showResult(result 'O' ? 'win' : 'lose');
+                         if (result === 'DRAW') showResult('draw');
+                         else showResult(result === 'O' ? 'win' : 'lose');
                     }
                 },
                 getValidMoves: (board, player) => {
-                    const opponent = player 'O' ? 'X' : 'O';
+                    const opponent = player === 'O' ? 'X' : 'O';
                     const moves = [];
                     for (let i = 0; i < 64; i++) {
-                        if (board[i] '') { if (othelloLogic.getFlips(board, i, player, opponent).length > 0) moves.push(i); }
+                        if (board[i] === '') { if (othelloLogic.getFlips(board, i, player, opponent).length > 0) moves.push(i); }
                     }
                     return moves;
                 },
@@ -1233,25 +1233,25 @@
                         if (i < 0 || i > 63) return;
                         let c = i % 8;
                         if (Math.abs(c - col) > 1) return;
-                        while (Math.floor(i / 8) >= 0 && Math.floor(i / 8) < 8 && i % 8 >= 0 && i % 8 < 8 && board[i] opponent) {
+                        while (Math.floor(i / 8) >= 0 && Math.floor(i / 8) < 8 && i % 8 >= 0 && i % 8 < 8 && board[i] === opponent) {
                             path.push(i); const prev_i = i; i += dir;
                             if (i < 0 || i > 63) { path.length = 0; break; }
                             if (Math.abs((i % 8) - (prev_i % 8)) > 1) { path.length = 0; break; }
                         }
-                        if (i >= 0 && i < 64 && board[i] player && path.length > 0) flips.push(...path);
+                        if (i >= 0 && i < 64 && board[i] === player && path.length > 0) flips.push(...path);
                     });
                     return flips;
                 },
                 getScores: (board) => {
                     let oScore = 0; let xScore = 0;
-                    board.forEach(cell => { if (cell 'O') oScore++; else if (cell 'X') xScore++; });
+                    board.forEach(cell => { if (cell === 'O') oScore++; else if (cell === 'X') xScore++; });
                     return { O: oScore, X: xScore };
                 }
             };
 
-            // --- WebSocket ---
+            // WebSocket
             function initializeWebSocket() {
-                if (socket && socket.readyState WebSocket.OPEN) socket.close();
+                if (socket && socket.readyState === WebSocket.OPEN) socket.close();
                 createRoomBtn.disabled = true; joinRoomBtn.disabled = true; showRoomListBtn.disabled = true;
                 try {
                     roomIdDisplay.textContent = 'サーバーに接続中...'; roomIdDisplay.style.display = 'block';
@@ -1279,9 +1279,9 @@
                         sidePanel.style.display = 'flex'; if(chatToggleBtn) chatToggleBtn.style.display = 'block'; handleResize();
                         roomIdDisplayHeader.textContent = `ルームID: ${currentRoomId}`; roomIdDisplayHeader.style.display = 'block';
                         if (data.currentBoardState) {
-                            if (data.gameType 'othello') {
+                            if (data.gameType === 'othello') {
                                 othelloLogic.updateBoardState(data.currentBoardState, data.currentPlayer);
-                                statusDisplay.textContent = `観戦中: ${data.currentPlayer 'O' ? '黒(O)' : '白(X)'} の番です`;
+                                statusDisplay.textContent = `観戦中: ${data.currentPlayer === 'O' ? '黒(O)' : '白(X)'} の番です`;
                             } else {
                                 boardState = data.currentBoardState; currentPlayer = data.currentPlayer;
                                 boardElement.innerHTML = ''; boardElement.className = `board-${boardSize}x${boardSize}`;
@@ -1298,13 +1298,13 @@
                         }
                         break;
                     case 'lobbyUpdate':
-                        if(data.newHostUsername) isHost = (data.newHostUsername username);
-                        const amIInSlot = data.lobby.playerO?.username username || data.lobby.playerX?.username username;
+                        if(data.newHostUsername) isHost = (data.newHostUsername === username);
+                        const amIInSlot = data.lobby.playerO?.username === username || data.lobby.playerX?.username === username;
                         if (!amIInSlot && myPlayerMark !== 'SPECTATOR') { myPlayerMark = 'SPECTATOR'; isReady = false; }
                         lockSettings(isOnlineGame && !isHost); 
                         if (data.lobby.playerColors) {
-                            if (myPlayerMark 'O' && data.lobby.playerColors.O !== myLocalColorPref) { myLocalColorPref = data.lobby.playerColors.O; }
-                            if (myPlayerMark 'X' && data.lobby.playerColors.X !== myLocalColorPref) { myLocalColorPref = data.lobby.playerColors.X; }
+                            if (myPlayerMark === 'O' && data.lobby.playerColors.O !== myLocalColorPref) { myLocalColorPref = data.lobby.playerColors.O; }
+                            if (myPlayerMark === 'X' && data.lobby.playerColors.X !== myLocalColorPref) { myLocalColorPref = data.lobby.playerColors.X; }
                             applyColors(data.lobby.playerColors);
                         }
                         updateLobbyUI(data.lobby);
@@ -1320,71 +1320,70 @@
                     case 'matchStarting':
                         if (autoReturnTimer) clearTimeout(autoReturnTimer); autoReturnTimer = null; isReady = false; 
                         gameLogic.initializeBoard(true); 
-                        currentPlayer = data.firstPlayer; myPlayerMark = data.myMark; isMyTurn = (myPlayerMark currentPlayer);
-                        // 名前情報更新は updateLobbyUI で完了しているはずだが念のため再反映
+                        currentPlayer = data.firstPlayer; myPlayerMark = data.myMark; isMyTurn = (myPlayerMark === currentPlayer);
                         updatePlayerNameDisplay();
-                        if (currentGameType 'othello') {
-                            const myColor = myPlayerMark 'O' ? '黒' : (myPlayerMark 'X' ? '白' : '観戦者');
-                            const turnColor = currentPlayer 'O' ? '黒' : '白';
-                            if (myPlayerMark 'SPECTATOR') statusDisplay.textContent = `観戦中: ${turnColor} (${currentPlayer}) の番です`;
+                        if (currentGameType === 'othello') {
+                            const myColor = myPlayerMark === 'O' ? '黒' : (myPlayerMark === 'X' ? '白' : '観戦者');
+                            const turnColor = currentPlayer === 'O' ? '黒' : '白';
+                            if (myPlayerMark === 'SPECTATOR') statusDisplay.textContent = `観戦中: ${turnColor} (${currentPlayer}) の番です`;
                             else { statusDisplay.textContent = `あなたは ${myColor}(${myPlayerMark}) です。` + (isMyTurn ? "あなたの番です。" : "相手の番です。"); }
                             if(isMyTurn) othelloLogic.updateHints(); 
                         } else {
-                            if (myPlayerMark 'SPECTATOR') statusDisplay.textContent = `観戦中: プレイヤー ${currentPlayer} の番です`;
+                            if (myPlayerMark === 'SPECTATOR') statusDisplay.textContent = `観戦中: プレイヤー ${currentPlayer} の番です`;
                             else { statusDisplay.textContent = `あなたは ${myPlayerMark} です。` + (isMyTurn ? "あなたの番です。" : "相手の番です。"); }
                         }
                         showMatchScreen(); lockSettings(true);
                         break;
                     case 'boardUpdate':
-                        isMyTurn = (myPlayerMark data.nextPlayer);
-                        updatePlayerNameDisplay(data.nextPlayer); // 手番プレイヤー強調更新
-                        if (data.gameType 'tictactoe') {
+                        isMyTurn = (myPlayerMark === data.nextPlayer);
+                        updatePlayerNameDisplay(data.nextPlayer);
+                        if (data.gameType === 'tictactoe') {
                             ticTacToeLogic.applyMove(data.cellIndex, data.player, true);
                             currentPlayer = data.nextPlayer;
                             statusDisplay.textContent = isMyTurn ? "あなたの番です。" : "相手の番です。";
-                        } else if (data.gameType 'othello') {
+                        } else if (data.gameType === 'othello') {
                             othelloLogic.updateBoardState(data.boardState, data.nextPlayer, data.player);
-                            const myColor = myPlayerMark 'O' ? '黒' : (myPlayerMark 'X' ? '白' : '観戦者');
+                            const myColor = myPlayerMark === 'O' ? '黒' : (myPlayerMark === 'X' ? '白' : '観戦者');
                             if (!data.nextPlayer) { statusDisplay.textContent = "対戦終了処理中..."; } 
                             else {
-                                const turnColor = data.nextPlayer 'O' ? '黒' : '白';
-                                if (myPlayerMark 'SPECTATOR') statusDisplay.textContent = `観戦中: ${turnColor} (${data.nextPlayer}) の番です`;
+                                const turnColor = data.nextPlayer === 'O' ? '黒' : '白';
+                                if (myPlayerMark === 'SPECTATOR') statusDisplay.textContent = `観戦中: ${turnColor} (${data.nextPlayer}) の番です`;
                                 else statusDisplay.textContent = `あなたは ${myColor}(${myPlayerMark}) です。` + (isMyTurn ? "あなたの番です。" : "相手の番です。");
                             }
                         }
                         break;
                     case 'passTurn':
-                        isMyTurn = (myPlayerMark data.nextPlayer); currentPlayer = data.nextPlayer;
-                        alert(`${data.passedPlayer 'O' ? '黒(O)' : '白(X)'} はパスしました。`);
+                        isMyTurn = (myPlayerMark === data.nextPlayer); currentPlayer = data.nextPlayer;
+                        alert(`${data.passedPlayer === 'O' ? '黒(O)' : '白(X)'} はパスしました。`);
                         updatePlayerNameDisplay(data.nextPlayer);
-                        const myColor = myPlayerMark 'O' ? '黒' : (myPlayerMark 'X' ? '白' : '観戦者');
-                        const turnColor = data.nextPlayer 'O' ? '黒' : '白';
-                        if (myPlayerMark 'SPECTATOR') statusDisplay.textContent = `観戦中: ${turnColor} (${data.nextPlayer}) の番です`;
+                        const myColor = myPlayerMark === 'O' ? '黒' : (myPlayerMark === 'X' ? '白' : '観戦者');
+                        const turnColor = data.nextPlayer === 'O' ? '黒' : '白';
+                        if (myPlayerMark === 'SPECTATOR') statusDisplay.textContent = `観戦中: ${turnColor} (${data.nextPlayer}) の番です`;
                         else {
                             statusDisplay.textContent = `あなたは ${myColor}(${myPlayerMark}) です。` + (isMyTurn ? "あなたの番です。" : "相手の番です。");
                             if(isMyTurn) othelloLogic.updateHints(); 
                         }
                         break;
                     case 'gameOver':
-                        if (data.boardState && data.gameType 'othello') {
+                        if (data.boardState && data.gameType === 'othello') {
                             boardState = data.boardState; othelloLogic.renderBoard(boardState);
                             if (data.scores) updateOthelloScoreDisplay(data.scores);
                         }
                         gameActive = false;
                         let resultType = data.result;
                         let statusText = '';
-                        if (data.gameType 'othello' && data.scores) {
+                        if (data.gameType === 'othello' && data.scores) {
                             const scores = data.scores; statusText = `黒(O): ${scores.O} - 白(X): ${scores.X}。 `; updateOthelloScoreDisplay(scores);
                         }
-                        if (resultType 'DRAW') {
+                        if (resultType === 'DRAW') {
                             statusText += '引き分けです！'; showResult('draw');
                             if (myPlayerMark !== 'SPECTATOR') scores.draw++;
                         } else {
-                            const iWon = (resultType myPlayerMark);
-                            if (myPlayerMark 'SPECTATOR') {
-                                const winnerName = (currentGameType 'othello') ? (resultType 'O' ? '黒(O)' : '白(X)') : `プレイヤー ${resultType}`;
+                            const iWon = (resultType === myPlayerMark);
+                            if (myPlayerMark === 'SPECTATOR') {
+                                const winnerName = (currentGameType === 'othello') ? (resultType === 'O' ? '黒(O)' : '白(X)') : `プレイヤー ${resultType}`;
                                 statusText += `${winnerName} の勝利です！`;
-                                showResult(resultType 'O' ? 'win' : 'lose');
+                                showResult(resultType === 'O' ? 'win' : 'lose');
                             } else {
                                 statusText += iWon ? "あなたの勝利です！" : "あなたの敗北です...";
                                 showResult(iWon ? 'win' : 'lose'); scores[iWon ? 'win' : 'lose']++;
@@ -1395,7 +1394,7 @@
                         showPostGameScreen();
                         if (autoReturnTimer) clearTimeout(autoReturnTimer);
                         autoReturnTimer = setTimeout(() => {
-                            if (isOnlineGame && socket && socket.readyState WebSocket.OPEN && !gameActive) {
+                            if (isOnlineGame && socket && socket.readyState === WebSocket.OPEN && !gameActive) {
                                 socket.send(JSON.stringify({ type: 'returnToLobby' })); showLobbyScreen(); autoReturnTimer = null;
                             }
                         }, 10000); 
@@ -1426,7 +1425,7 @@
                 socket.send(JSON.stringify({ type: 'joinRoom', username: username, roomId: roomId }));
             }
             function sendSettingsUpdate() {
-                if (isHost && isOnlineGame && socket && socket.readyState WebSocket.OPEN) {
+                if (isHost && isOnlineGame && socket && socket.readyState === WebSocket.OPEN) {
                     const settings = getSettingsFromUI();
                     settings.maxPlayers = parseInt(maxPlayersInput.value, 10);
                     socket.send(JSON.stringify({ type: 'updateSettings', settings: settings }));
@@ -1445,7 +1444,7 @@
             }
             function sendChat() {
                 const message = chatInput.value.trim();
-                if (message && socket && socket.readyState WebSocket.OPEN) {
+                if (message && socket && socket.readyState === WebSocket.OPEN) {
                     socket.send(JSON.stringify({ type: 'chat', message: message })); addChatMessage(username, message, true); chatInput.value = '';
                 }
             }
@@ -1453,17 +1452,17 @@
             function openModal(modalId) { const modal = document.getElementById(modalId); if(modal) modal.style.display = 'flex'; }
             function closeModal(modalId) { const modal = document.getElementById(modalId); if (modal) modal.style.display = 'none'; }
             closeBtns.forEach(btn => btn.addEventListener('click', () => closeModal(btn.getAttribute('data-modal-id'))));
-            window.addEventListener('click', (e) => modals.forEach(modal => { if (e.target modal) closeModal(modal.id); }));
+            window.addEventListener('click', (e) => modals.forEach(modal => { if (e.target === modal) closeModal(modal.id); }));
 
             function showButtonSet(setName) {
-                ['local', 'lobby', 'in-game', 'post-game'].forEach(set => { document.getElementById(`buttonSet-${set}`).style.display = (set setName) ? 'block' : 'none'; });
+                ['local', 'lobby', 'in-game', 'post-game'].forEach(set => { document.getElementById(`buttonSet-${set}`).style.display = (set === setName) ? 'block' : 'none'; });
             }
             function showLobbyScreen() {
                 if (autoReturnTimer) clearTimeout(autoReturnTimer); autoReturnTimer = null;
                 gameActive = false; statusDisplay.textContent = '待機画面 (ロビー)';
                 lobbyContainer.style.display = 'block'; boardContainer.style.display = 'none';
                 showButtonSet('lobby'); settingsBtnLobby.style.display = 'flex';
-                primaryActionBtnLobby.disabled = (myPlayerMark 'SPECTATOR');
+                primaryActionBtnLobby.disabled = (myPlayerMark === 'SPECTATOR');
                 if (isReady) { primaryActionBtnLobby.textContent = '準備解除'; primaryActionBtnLobby.classList.add('ready'); } 
                 else { primaryActionBtnLobby.textContent = '準備完了'; primaryActionBtnLobby.classList.remove('ready'); }
                 lockSettings(isOnlineGame && !isHost); scoreBoard.style.display = 'flex'; roomIdDisplayHeader.style.display = 'block'; othelloScoreBoard.style.display = 'none'; matchPlayerInfo.style.display = 'none';
@@ -1471,18 +1470,18 @@
             function showMatchScreen() {
                 lobbyContainer.style.display = 'none'; boardContainer.style.display = 'block';
                 showButtonSet('in-game');
-                primaryActionBtnGame.style.display = (myPlayerMark 'SPECTATOR') ? 'none' : 'flex'; primaryActionBtnGame.disabled = false; 
+                primaryActionBtnGame.style.display = (myPlayerMark === 'SPECTATOR') ? 'none' : 'flex'; primaryActionBtnGame.disabled = false; 
                 lockSettings(true);
                 // プレイヤー名表示更新
                 updatePlayerNameDisplay(currentPlayer);
                 matchPlayerInfo.style.display = 'flex'; // 表示オン
-                if(currentGameType 'othello') othelloScoreBoard.style.display = 'flex';
+                if(currentGameType === 'othello') othelloScoreBoard.style.display = 'flex';
             }
             function showPostGameScreen() { showButtonSet('post-game'); primaryActionBtnPostGame.disabled = false; matchPlayerInfo.style.display = 'flex'; }
             function showResult(resultType) {
                 boardElement.classList.add('game-over'); resultText.classList.remove('win', 'lose', 'draw');
-                if (resultType 'win') { resultText.textContent = 'WIN'; resultText.classList.add('win'); } 
-                else if (resultType 'lose') { resultText.textContent = 'LOSE'; resultText.classList.add('lose'); } 
+                if (resultType === 'win') { resultText.textContent = 'WIN'; resultText.classList.add('win'); } 
+                else if (resultType === 'lose') { resultText.textContent = 'LOSE'; resultText.classList.add('lose'); } 
                 else { resultText.textContent = 'DRAW'; resultText.classList.add('draw'); }
                 resultOverlay.style.display = 'block';
             }
@@ -1493,17 +1492,17 @@
             }
             function updateLobbySlotDisplay() {
                 let player1Mark = 'O'; let player2Mark = 'X';
-                if (currentGameType 'othello') { player1Mark = '黒'; player2Mark = '白'; }
-                const currentOrder = document.querySelector('input[name="playerOrder"]:checked').value; const isRandom = (currentOrder 'random');
+                if (currentGameType === 'othello') { player1Mark = '黒'; player2Mark = '白'; }
+                const currentOrder = document.querySelector('input[name="playerOrder"]:checked').value; const isRandom = (currentOrder === 'random');
                 const oMark = isRandom ? '(?) ' : `(${player1Mark}) `; const xMark = isRandom ? '(?) ' : `(${player2Mark}) `;
                 
                 // updateLobbyUIで一括更新するためここでは何もしない(または必要なら再描画)
             }
 
-            // 新規: プレイヤー名表示更新関数
+            // プレイヤー名表示更新関数
             function updatePlayerNameDisplay(activePlayerMark = null) {
                 let labelO = 'O'; let labelX = 'X';
-                if(currentGameType 'othello') { labelO = '黒(O)'; labelX = '白(X)'; }
+                if(currentGameType === 'othello') { labelO = '黒(O)'; labelX = '白(X)'; }
                 
                 playerDisplayO.textContent = `${labelO}: ${currentRoomPlayerNames.O}`;
                 playerDisplayX.textContent = `${labelX}: ${currentRoomPlayerNames.X}`;
@@ -1511,14 +1510,14 @@
                 playerDisplayO.classList.remove('active');
                 playerDisplayX.classList.remove('active');
                 
-                if (activePlayerMark 'O') playerDisplayO.classList.add('active');
-                if (activePlayerMark 'X') playerDisplayX.classList.add('active');
+                if (activePlayerMark === 'O') playerDisplayO.classList.add('active');
+                if (activePlayerMark === 'X') playerDisplayX.classList.add('active');
             }
 
             function updateLobbyUI(lobby) {
                 let player1Mark = 'O'; let player2Mark = 'X';
-                if (currentGameType 'othello') { player1Mark = '黒'; player2Mark = '白'; }
-                const currentOrder = document.querySelector('input[name="playerOrder"]:checked').value; const isRandom = (currentOrder 'random');
+                if (currentGameType === 'othello') { player1Mark = '黒'; player2Mark = '白'; }
+                const currentOrder = document.querySelector('input[name="playerOrder"]:checked').value; const isRandom = (currentOrder === 'random');
                 const oMark = isRandom ? '(?) ' : `(${player1Mark}) `; const xMark = isRandom ? '(?) ' : `(${player2Mark}) `;
                 
                 // ホスト判定用
@@ -1527,10 +1526,10 @@
                 const slotO = lobby.playerO; const slotO_Name = playerSlotO.querySelector('.player-slot-name'); const slotO_Btn = playerSlotO.querySelector('.slot-btn');
                 const oldKickBtnO = playerSlotO.querySelector('.kick-btn'); if (oldKickBtnO) oldKickBtnO.remove();
                 if (slotO) {
-                    const hostMark = (slotO.username hostUser) ? ' 👑' : '';
+                    const hostMark = (slotO.username === hostUser) ? ' 👑' : '';
                     slotO_Name.textContent = `${oMark}${slotO.username}${hostMark}`; slotO_Name.classList.remove('empty');
                     currentRoomPlayerNames.O = slotO.username; // 名前保存
-                    if (slotO.username username) {
+                    if (slotO.username === username) {
                         slotO_Btn.style.display = 'flex'; slotO_Btn.textContent = 'スロット退出'; slotO_Btn.className = 'slot-btn leave';
                         slotO_Btn.onclick = () => socket.send(JSON.stringify({ type: 'leaveSlot', slot: 'O' }));
                     } else {
@@ -1544,17 +1543,17 @@
                 } else {
                     slotO_Name.textContent = `${oMark}空き`; slotO_Name.classList.add('empty');
                     currentRoomPlayerNames.O = '?';
-                    slotO_Btn.style.display = (myPlayerMark 'SPECTATOR') ? 'flex' : 'none'; slotO_Btn.textContent = '参加する'; slotO_Btn.className = 'slot-btn';
+                    slotO_Btn.style.display = (myPlayerMark === 'SPECTATOR') ? 'flex' : 'none'; slotO_Btn.textContent = '参加する'; slotO_Btn.className = 'slot-btn';
                     slotO_Btn.onclick = () => socket.send(JSON.stringify({ type: 'takeSlot', slot: 'O', color: myLocalColorPref }));
                 }
 
                 const slotX = lobby.playerX; const slotX_Name = playerSlotX.querySelector('.player-slot-name'); const slotX_Btn = playerSlotX.querySelector('.slot-btn');
                 const oldKickBtnX = playerSlotX.querySelector('.kick-btn'); if (oldKickBtnX) oldKickBtnX.remove();
                 if (slotX) {
-                    const hostMark = (slotX.username hostUser) ? ' 👑' : '';
+                    const hostMark = (slotX.username === hostUser) ? ' 👑' : '';
                     slotX_Name.textContent = `${xMark}${slotX.username}${hostMark}`; slotX_Name.classList.remove('empty');
                     currentRoomPlayerNames.X = slotX.username; // 名前保存
-                    if (slotX.username username) {
+                    if (slotX.username === username) {
                         slotX_Btn.style.display = 'flex'; slotX_Btn.textContent = 'スロット退出'; slotX_Btn.className = 'slot-btn leave';
                         slotX_Btn.onclick = () => socket.send(JSON.stringify({ type: 'leaveSlot', slot: 'X' }));
                     } else {
@@ -1568,16 +1567,16 @@
                 } else {
                     slotX_Name.textContent = `${xMark}空き`; slotX_Name.classList.add('empty');
                     currentRoomPlayerNames.X = '?';
-                    slotX_Btn.style.display = (myPlayerMark 'SPECTATOR') ? 'flex' : 'none'; slotX_Btn.textContent = '参加する'; slotX_Btn.className = 'slot-btn';
+                    slotX_Btn.style.display = (myPlayerMark === 'SPECTATOR') ? 'flex' : 'none'; slotX_Btn.textContent = '参加する'; slotX_Btn.className = 'slot-btn';
                     slotX_Btn.onclick = () => socket.send(JSON.stringify({ type: 'takeSlot', slot: 'X', color: myLocalColorPref }));
                 }
                 
                 spectatorList.innerHTML = '';
                 lobby.spectators.forEach(spec => {
                     const li = document.createElement('li'); const nameSpan = document.createElement('span'); 
-                    const hostMark = (spec.username hostUser) ? ' 👑' : '';
+                    const hostMark = (spec.username === hostUser) ? ' 👑' : '';
                     nameSpan.textContent = spec.username + hostMark;
-                    if (spec.username username) { nameSpan.textContent += ' (あなた)'; nameSpan.style.fontWeight = 'bold'; }
+                    if (spec.username === username) { nameSpan.textContent += ' (あなた)'; nameSpan.style.fontWeight = 'bold'; }
                     li.appendChild(nameSpan);
                     if (isHost && spec.username !== username) {
                         const kickBtn = document.createElement('button'); kickBtn.className = 'slot-btn leave'; kickBtn.textContent = 'Kick';
@@ -1586,7 +1585,7 @@
                     }
                     spectatorList.appendChild(li);
                 });
-                primaryActionBtnLobby.disabled = (myPlayerMark 'SPECTATOR');
+                primaryActionBtnLobby.disabled = (myPlayerMark === 'SPECTATOR');
                 if (isReady) { primaryActionBtnLobby.textContent = '準備解除'; primaryActionBtnLobby.classList.add('ready'); } 
                 else { primaryActionBtnLobby.textContent = '準備完了'; primaryActionBtnLobby.classList.remove('ready'); }
             }
@@ -1594,21 +1593,21 @@
             function addLog(message, boardSnapshot) {
                 turnCounter++; 
                 const snapshotSize = Math.sqrt(boardSnapshot.length);
-                currentGameLog.push({ message: message, board: [...boardSnapshot], turn: turnCounter, boardSize: (currentGameType 'othello') ? 8 : snapshotSize, gameType: currentGameType });
+                currentGameLog.push({ message: message, board: [...boardSnapshot], turn: turnCounter, boardSize: (currentGameType === 'othello') ? 8 : snapshotSize, gameType: currentGameType });
             }
 
             showLogList = function() {
                 logModalTitle.textContent = "ログ確認 (試合一覧)"; logContent.innerHTML = ''; const listContainer = document.createElement('div'); listContainer.className = 'log-list-container';
                 const allLogs = sessionLog.concat(currentGameLog.length > 0 ? [currentGameLog] : []); 
-                if (allLogs.length 0) { listContainer.innerHTML = '<p>表示できるログがありません。</p>'; } 
+                if (allLogs.length === 0) { listContainer.innerHTML = '<p>表示できるログがありません。</p>'; } 
                 else {
                     allLogs.forEach((matchLog, index) => {
                         const item = document.createElement('div'); item.className = 'log-list-item';
                         const logEntry = matchLog[0] || {};
                         const logGameType = logEntry.gameType || (logEntry.board && logEntry.board.length > 25 ? 'othello' : 'tictactoe');
-                        const logBoardSize = logEntry.boardSize || (logGameType 'othello' ? 8 : (logEntry.board ? Math.sqrt(logEntry.board.length) : 3));
-                        const gameName = logGameType 'othello' ? 'オセロ' : 'OXゲーム';
-                        const isCurrent = (index sessionLog.length) && (currentGameLog.length > 0);
+                        const logBoardSize = logEntry.boardSize || (logGameType === 'othello' ? 8 : (logEntry.board ? Math.sqrt(logEntry.board.length) : 3));
+                        const gameName = logGameType === 'othello' ? 'オセロ' : 'OXゲーム';
+                        const isCurrent = (index === sessionLog.length) && (currentGameLog.length > 0);
                         if (matchLog.isImported) { item.textContent = `インポートしたログ (${gameName} ${logBoardSize}x${logBoardSize})`; } 
                         else { item.textContent = `第 ${index + 1} 試合 (${gameName} ${logBoardSize}x${logBoardSize}) (${isCurrent ? (gameActive ? '進行中' : '終了') : '終了'})`; }
                         item.onclick = () => showMatchLogDetail(index, isCurrent); listContainer.appendChild(item);
@@ -1622,8 +1621,8 @@
                 const matchNumber = isCurrent ? sessionLog.length + 1 : matchIndex + 1;
                 const logEntry = matchLog[0] || {};
                 const logGameType = logEntry.gameType || (logEntry.board && logEntry.board.length > 25 ? 'othello' : 'tictactoe');
-                const logBoardSize = logEntry.boardSize || (logGameType 'othello' ? 8 : (logEntry.board ? Math.sqrt(logEntry.board.length) : 3));
-                const gameName = logGameType 'othello' ? 'オセロ' : 'OXゲーム';
+                const logBoardSize = logEntry.boardSize || (logGameType === 'othello' ? 8 : (logEntry.board ? Math.sqrt(logEntry.board.length) : 3));
+                const gameName = logGameType === 'othello' ? 'オセロ' : 'OXゲーム';
                 logModalTitle.textContent = (matchLog.isImported ? `インポートログ詳細 (${gameName} ${logBoardSize}x${logBoardSize})` : `第 ${matchNumber} 試合 (${gameName} ${logBoardSize}x${logBoardSize}) のログ詳細`);
                 logContent.innerHTML = '';
                 const controls = document.createElement('div'); controls.className = 'log-detail-controls';
@@ -1632,22 +1631,22 @@
                 matchLog.forEach(entry => {
                     const entryDiv = document.createElement('div'); entryDiv.className = 'log-entry';
                     const dynamicGameType = entry.gameType || (entry.board && entry.board.length > 25 ? 'othello' : 'tictactoe');
-                    const dynamicBoardSize = entry.boardSize || (dynamicGameType 'othello' ? 8 : (entry.board ? Math.sqrt(entry.board.length) : 3));
+                    const dynamicBoardSize = entry.boardSize || (dynamicGameType === 'othello' ? 8 : (entry.board ? Math.sqrt(entry.board.length) : 3));
                     const miniCellSize = Math.max(10, Math.floor(90 / dynamicBoardSize));
                     let boardHtml = '';
-                    if (dynamicGameType 'othello') {
+                    if (dynamicGameType === 'othello') {
                         boardHtml = `<div class="mini-board othello-log" style="grid-template-columns: repeat(${dynamicBoardSize}, 1fr); width: ${miniCellSize * dynamicBoardSize}px; height: ${miniCellSize * dynamicBoardSize}px;">`;
                         (entry.board || []).forEach(mark => {
-                            if (mark 'O') { boardHtml += `<div class="mini-cell othello-cell"><div class="mini-disc o"></div></div>`; } 
-                            else if (mark 'X') { boardHtml += `<div class="mini-cell othello-cell"><div class="mini-disc x"></div></div>`; } 
+                            if (mark === 'O') { boardHtml += `<div class="mini-cell othello-cell"><div class="mini-disc o"></div></div>`; } 
+                            else if (mark === 'X') { boardHtml += `<div class="mini-cell othello-cell"><div class="mini-disc x"></div></div>`; } 
                             else { boardHtml += `<div class="mini-cell othello-cell"></div>`; }
                         });
                     } else {
                         boardHtml = `<div class="mini-board" style="grid-template-columns: repeat(${dynamicBoardSize}, 1fr); width: ${miniCellSize * dynamicBoardSize}px; height: ${miniCellSize * dynamicBoardSize}px;">`;
                         (entry.board || []).forEach(mark => {
-                            const fontSize = dynamicBoardSize 3 ? '1.2rem' : (dynamicBoardSize 4 ? '0.9rem' : '0.7rem');
-                            if (mark 'O') { boardHtml += `<div class="mini-cell o" style="font-size: ${fontSize};">O</div>`; } 
-                            else if (mark 'X') { boardHtml += `<div class="mini-cell x" style="font-size: ${fontSize};">X</div>`; } 
+                            const fontSize = dynamicBoardSize === 3 ? '1.2rem' : (dynamicBoardSize === 4 ? '0.9rem' : '0.7rem');
+                            if (mark === 'O') { boardHtml += `<div class="mini-cell o" style="font-size: ${fontSize};">O</div>`; } 
+                            else if (mark === 'X') { boardHtml += `<div class="mini-cell x" style="font-size: ${fontSize};">X</div>`; } 
                             else { boardHtml += `<div class="mini-cell" style="font-size: ${fontSize};">&nbsp;</div>`; }
                         });
                     }
@@ -1659,9 +1658,9 @@
             }
 
             exportMatchLog = function(matchIndex) {
-                const isCurrent = (matchIndex 'current'); const matchLog = isCurrent ? currentGameLog : sessionLog[matchIndex]; const matchNumber = isCurrent ? sessionLog.length + 1 : matchIndex + 1;
-                const logEntry = matchLog[0] || {}; const logGameType = logEntry.gameType || (logEntry.board && logEntry.board.length > 25 ? 'othello' : 'tictactoe'); const logBoardSize = logEntry.boardSize || (logGameType 'othello' ? 8 : (logEntry.board ? Math.sqrt(logEntry.board.length) : 3));
-                if (!matchLog || (matchLog.length 0) || (matchLog.length 1 && !matchLog.isImported && !isCurrent)) { alert('保存するログがありません。'); return; }
+                const isCurrent = (matchIndex === 'current'); const matchLog = isCurrent ? currentGameLog : sessionLog[matchIndex]; const matchNumber = isCurrent ? sessionLog.length + 1 : matchIndex + 1;
+                const logEntry = matchLog[0] || {}; const logGameType = logEntry.gameType || (logEntry.board && logEntry.board.length > 25 ? 'othello' : 'tictactoe'); const logBoardSize = logEntry.boardSize || (logGameType === 'othello' ? 8 : (logEntry.board ? Math.sqrt(logEntry.board.length) : 3));
+                if (!matchLog || (matchLog.length === 0) || (matchLog.length === 1 && !matchLog.isImported && !isCurrent)) { alert('保存するログがありません。'); return; }
                 const logData = JSON.stringify(matchLog, null, 2); const blob = new Blob([logData], { type: 'application/json' }); const url = URL.createObjectURL(blob);
                 const a = document.createElement('a'); a.download = `game_log_${logGameType}_match_${matchLog.isImported ? 'imported' : matchNumber}_${logBoardSize}x${logBoardSize}_${Date.now()}.json`; a.href = url; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert(`ログを保存しました。`);
             }
@@ -1675,7 +1674,7 @@
                         fullReset(); importedLog.isImported = true; sessionLog = [importedLog]; currentGameLog = [];
                         const settings = importedLog[0] || {}; const gameType = settings.gameType || (settings.board.length > 25 ? 'othello' : 'tictactoe');
                         switchGame(gameType);
-                        applySettings({ boardSize: settings.boardSize || (gameType 'othello' ? 8 : Math.sqrt(settings.board.length)), playerOrder: 'assigned', limitMode: false, highlightOldest: false }, false);
+                        applySettings({ boardSize: settings.boardSize || (gameType === 'othello' ? 8 : Math.sqrt(settings.board.length)), playerOrder: 'assigned', limitMode: false, highlightOldest: false }, false);
                         alert('ログを読み込みました。「ログ確認」で表示します。'); showLogList();
                     } catch (error) { alert('ログの読み込みに失敗しました。\n' + error.message); }
                 }; reader.onerror = () => { alert('ファイルの読み込みに失敗しました。'); }; reader.readAsText(file); event.target.value = null;
@@ -1683,10 +1682,10 @@
             
             function updateRoomList(rooms, page, totalPages) {
                 publicRoomList.innerHTML = '';
-                if (rooms.length 0) publicRoomList.innerHTML = '<p style="text-align: center; padding: 20px; color: #999;">公開中のルームはありません。</p>';
+                if (rooms.length === 0) publicRoomList.innerHTML = '<p style="text-align: center; padding: 20px; color: #999;">公開中のルームはありません。</p>';
                 rooms.forEach(room => {
                     const item = document.createElement('div'); item.className = 'room-list-item';
-                    const gameName = room.gameType 'othello' ? 'オセロ' : 'OXゲーム';
+                    const gameName = room.gameType === 'othello' ? 'オセロ' : 'OXゲーム';
                     item.innerHTML = `<div><div class="room-list-id">ID: ${room.id} (${gameName}) ${room.inGame ? '(試合中)' : ''}</div><div class="room-list-count">人数: ${room.count} / ${room.max}</div></div><button class="room-list-join-btn">参加</button>`;
                     item.querySelector('.room-list-join-btn').addEventListener('click', (e) => {
                         e.stopPropagation(); username = usernameInputOnline.value.trim();
@@ -1699,17 +1698,17 @@
             }
             
             function getRoomList(page = 1) {
-                if (socket && socket.readyState WebSocket.OPEN) socket.send(JSON.stringify({ type: 'getRoomList', page: page }));
+                if (socket && socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ type: 'getRoomList', page: page }));
                 else { alert('サーバーに接続していません。「オンライン対戦」を再度開いてください。'); initializeWebSocket(); }
             }
 
-            // --- イベントリスナー ---
+            // イベントリスナー
             logBtn.addEventListener('click', showLogList); logBtnLobby.addEventListener('click', showLogList); logBtnPostGame.addEventListener('click', () => showMatchLogDetail(0, true)); importLogInput.addEventListener('change', importLog);
             settingsBtn.addEventListener('click', () => openModal('settingsModal')); settingsBtnLobby.addEventListener('click', () => openModal('settingsModal'));
             boardSizeRadios.forEach(radio => radio.addEventListener('change', () => { updateSettingDependencies(true); checkSecretCode(radio.value); }));
             playerOrderRadios.forEach(radio => radio.addEventListener('change', () => { sendSettingsUpdate(); updateLobbySlotDisplay(); }));
             limitModeCheckbox.addEventListener('change', () => updateSettingDependencies(true));
-            highlightOldestCheckbox.addEventListener('change', () => { if(currentGameType 'tictactoe') ticTacToeLogic.updateOldestHighlight(); sendSettingsUpdate(); });
+            highlightOldestCheckbox.addEventListener('change', () => { if(currentGameType === 'tictactoe') ticTacToeLogic.updateOldestHighlight(); sendSettingsUpdate(); });
             dockChatToggle.addEventListener('change', handleResize); maxPlayersInput.addEventListener('change', sendSettingsUpdate); 
             onlineBtn.addEventListener('click', () => { initializeWebSocket(); openModal('onlineModal'); });
             createRoomBtn.addEventListener('click', createRoom); joinRoomBtn.addEventListener('click', () => joinRoom()); 
@@ -1734,17 +1733,17 @@
             });
             
             const chatModalFunc = () => openModal('chatModal'); chatBtnLobby.addEventListener('click', chatModalFunc); chatBtnGame.addEventListener('click', chatModalFunc); chatBtnPostGame.addEventListener('click', chatModalFunc);
-            chatSendBtn.addEventListener('click', sendChat); chatInput.addEventListener('keydown', (e) => { if (e.key 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); } });
+            chatSendBtn.addEventListener('click', sendChat); chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); } });
             
             function checkSecretCode(value) {
-                if (settingsModal.style.display 'none' || settingsModal.style.display '') { secretIndex = 0; return; }
-                if (value secretCode[secretIndex]) {
+                if (settingsModal.style.display === 'none' || settingsModal.style.display === '') { secretIndex = 0; return; }
+                if (value === secretCode[secretIndex]) {
                     secretIndex++;
-                    if (secretIndex secretCode.length) {
+                    if (secretIndex === secretCode.length) {
                         document.getElementById('colorSelectContainer').style.display = 'flex';
                         alert("隠しコマンド成功！カラーパレットが解放されました。"); secretIndex = 0; 
                     }
-                } else { secretIndex = 0; if (value secretCode[secretIndex]) secretIndex++; }
+                } else { secretIndex = 0; if (value === secretCode[secretIndex]) secretIndex++; }
             }
 
             document.querySelectorAll('input[name="gameType"]').forEach(radio => {
@@ -1761,7 +1760,7 @@
                     if (e.target.classList.contains('disabled')) return;
                     const color = e.target.dataset.color;
                     myLocalColorPref = color;
-                    if (isOnlineGame && (myPlayerMark 'O' || myPlayerMark 'X')) {
+                    if (isOnlineGame && (myPlayerMark === 'O' || myPlayerMark === 'X')) {
                         socket.send(JSON.stringify({ type: 'updateColor', color: color }));
                     } else {
                         if (!isOnlineGame) applyColors({ O: color, X: null }); 
@@ -1771,7 +1770,7 @@
             });
             document.getElementById('resetColorBtn').addEventListener('click', () => {
                 myLocalColorPref = null;
-                if (isOnlineGame && (myPlayerMark 'O' || myPlayerMark 'X')) {
+                if (isOnlineGame && (myPlayerMark === 'O' || myPlayerMark === 'X')) {
                     socket.send(JSON.stringify({ type: 'updateColor', color: null }));
                 } else {
                     if (!isOnlineGame) applyColors({ O: null, X: null });
@@ -1805,9 +1804,5 @@
 </body>
 
 </html>
-
-
-
-
 
 
